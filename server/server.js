@@ -31,8 +31,18 @@ app.get("/", (req, res)=>{
 })
 
 io.on("connection",(socket)=>{
-console.log('user connected')
-console.log("ID", socket.id)
+console.log('user connected ID: ', socket.id)
+
+// socket.emit("welcome",`welcome to server, ${socket.id}`)
+// socket.broadcast.emit("welcome",`${socket.id}, joined the server`)
+
+socket.on('message', (data)=>{
+    console.log(data)
+})
+
+socket.on('disconnect',()=>{
+    console.log('user Disconnected', socket.id)
+})
 })
 
 server.listen(port, ()=>{
