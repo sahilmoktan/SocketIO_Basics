@@ -16,4 +16,8 @@
 - - "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js"  }
--  
+
+-----------------------------
+## ui 
+![socket](https://github.com/sahilmoktan/SocketIO_Basics/assets/103031235/24bf1f0c-d1e7-4324-b33d-abe1e486733d)
+
