@@ -2,6 +2,10 @@ import express from "express";
 import { Server } from "socket.io";
 import {createServer} from "http"
 import cors from "cors";
+import jwt  from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+
+const secretKeyJWT = 'hello'
 
 const port = 3000 
 
@@ -12,7 +16,7 @@ const server = createServer(app)
 
 const io = new Server(server,{
     cors:{
-        origin:"*",
+        origin: ["http://localhost:5173", "http://localhost:3000"],
         methods: ["GET", "POST"],
         credentials: true,
     }
@@ -30,6 +34,30 @@ app.get("/", (req, res)=>{
     res.send("hello socket")
 })
 
+app.get("/login", (req, res)=>{
+  const token =  jwt.sign({_id:"sfsfsfsf"}, secretKeyJWT)
+  res.cookie('token', token, {httpOnly: true, secure:true, sameSite: "none"}).json({
+    message:'login success'
+  })
+})
+
+io.use((socket, next)=>{
+cookieParser()(socket.request, socket.request.res,(err)=>{
+    if (err) return next(err)
+    const token = socket.request.cookies.token
+    if(!token) return next (new Error ("Authentication Error"))
+    const decoded = jwt.verify(token, secretKeyJWT)
+    try {
+        const decoded = jwt.verify(token, secretKeyJWT);
+        if (!decoded) return next(new Error("Authentication Error"));
+        // You can perform additional checks here if needed
+        next();
+    } catch (error) {
+        return next(error);
+    }
+})
+    
+})
 
 //io whole circuit lai message trigger hunexa
 io.on("connection",(socket)=>{
