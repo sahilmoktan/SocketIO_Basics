@@ -50,6 +50,12 @@ io.on("connection",(socket)=>{
     io.to(room).emit("receive-message", message)
     })
 
+    //above room mean sending particular person joinroom mean group chat
+    socket.on('join-room', (room)=>{
+        socket.join(room)
+        console.log(`${socket.id} user join ${room}`)
+    })
+
     socket.on('disconnect',()=>{
     console.log('user Disconnected', socket.id)
     })
