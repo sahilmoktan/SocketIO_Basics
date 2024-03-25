@@ -41,11 +41,13 @@ io.on("connection",(socket)=>{
     socket.broadcast.emit("welcome",`${socket.id}, joined the server`)
 
     //socket.on //'message' ma frontend bata ako data 
-    socket.on('message', (data)=>{
-    console.log(data)
+    socket.on('message', ({room, message})=>{
+    console.log({"message":message, "room":room})
 
-    //socket.broadcast.emit //'message' bata ako data feri sab lai .emit le send to frontend
-    socket.broadcast.emit('receive-message', data)  //io.emit garda sabai lai including self lai janxa 
+    //socket.broadcast.emit 'message' bata ako data feri sab lai .emit le send to frontend
+    // socket.broadcast.emit('receive-message', {room, message})  //io.emit garda sabai lai including self lai janxa 
+    
+    io.to(room).emit("receive-message", message)
     })
 
     socket.on('disconnect',()=>{

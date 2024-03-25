@@ -8,24 +8,26 @@ const App = () => {
 
   const [message, setMessage]=useState('')
   const [room, setRoom]=useState('')
+  const [socketID, setSocketID]=useState('')
 
   const handelSubmit =(e)=>{
     //.emit sending message data to backend
     e.preventDefault()
     socket.emit('message', {message,room})
-    setRoom('')
+    setMessage('')
   }
 
   useEffect(()=>{
     //.on backend bata ako data listening gareko
     socket.on("connect",()=>{
+      setSocketID(socket.id)
       console.log("connected", socket.id)
     })
 
-    socket.on("welcome",(s)=>{console.log(s)})
+    // socket.on("welcome",(s)=>{console.log(s)})
 
-    socket.on('receive-message',(data)=>{
-      console.log(data)
+    socket.on('receive-message',(message)=>{
+      console.log(message)
     })
     
     return () =>{
@@ -40,8 +42,8 @@ const App = () => {
         Welcome to Socket.io by sahil
       </Typography>
 
-    <Typography variant='h4' component="div" gutterBottom>
-      {socket.id}
+    <Typography variant='h6' component="div" gutterBottom>
+      {socketID}
     </Typography>
 
     <form onSubmit={handelSubmit}>
