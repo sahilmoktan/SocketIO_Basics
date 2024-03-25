@@ -30,19 +30,27 @@ app.get("/", (req, res)=>{
     res.send("hello socket")
 })
 
+
+//io whole circuit lai message trigger hunexa
 io.on("connection",(socket)=>{
-console.log('user connected ID: ', socket.id)
+    console.log('user connected ID: ', socket.id)
 
-// socket.emit("welcome",`welcome to server, ${socket.id}`)
-// socket.broadcast.emit("welcome",`${socket.id}, joined the server`)
+    socket.emit("welcome",`welcome to server, ${socket.id}`)
 
-socket.on('message', (data)=>{
+    //aru join vako dehkne but afno welcome matra
+    socket.broadcast.emit("welcome",`${socket.id}, joined the server`)
+
+    //socket.on //'message' ma frontend bata ako data 
+    socket.on('message', (data)=>{
     console.log(data)
-})
 
-socket.on('disconnect',()=>{
+    //socket.broadcast.emit //'message' bata ako data feri sab lai .emit le send to frontend
+    socket.broadcast.emit('receive-message', data)  //io.emit garda sabai lai including self lai janxa 
+    })
+
+    socket.on('disconnect',()=>{
     console.log('user Disconnected', socket.id)
-})
+    })
 })
 
 server.listen(port, ()=>{
